@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMP 1st Error Letter Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            background-image: url('https://i.imgur.com/9hEGjS2.png');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1 {
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        select, input[type="text"], button, textarea {
+            width: calc(100% - 24px);
+            margin: 12px auto;
+            padding: 12px;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s ease-in-out;
+        }
+
+        select:focus, input[type="text"]:focus, textarea:focus {
+            border-color: #0056b3;
+        }
+
+        button {
+            background-color: #0056b3;
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #004494;
+            transform: scale(1.05);
+        }
+
+        .link-container {
+            margin-top: 20px;
+        }
+
+        .send-link {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            display: inline-block;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .send-link:hover {
+            background-color: #004494;
+            transform: scale(1.05);
+        }
+
+        .image-container img {
+            max-width: 150px;
+            height: auto;
+            transition: transform 0.3s;
+        }
+
+        .image-container img:hover {
+            transform: rotate(5deg);
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            width: 30%;
+            padding: 10px;
+            background-color: #eee;
+            border-radius: 4px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .step.active {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 25px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0;
+            background-color: #0056b3;
+            border-radius: 25px;
+            transition: width 0.4s ease;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin: 0 0 10px 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .copy-btn {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .copy-btn:hover {
+            background-color: #004494;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #0056b3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background-color: #ccc;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #aaa;
+        }
+
+        .back-btn:disabled {
+            background-color: #eee;
+            cursor: not-allowed;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .step {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .back-btn, .copy-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container, 
+        body.dark-mode .modal-content {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .card {
+            background-color: #2e2e2e;
+            border: 1px solid #555;
+        }
+
+        body.dark-mode select, 
+        body.dark-mode input[type="text"], 
+        body.dark-mode textarea {
+            background-color: #3e3e3e;
+            color: #e0e0e0;
+            border: 1px solid #555;
+        }
+
+        body.dark-mode button {
+            background-color: #444;
+            color: #fff;
+        }
+
+        body.dark-mode button:hover {
+            background-color: #666;
+        }
+
+        body.dark-mode .send-link {
+            background-color: #444;
+            color: #fff;
+        }
+
+        body.dark-mode .send-link:hover {
+            background-color: #666;
+        }
+
+        body.dark-mode .error {
+            color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-container">
+        <label for="darkModeToggle">Dark Mode:</label>
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="container">
+        <div class="image-container">
+            <img src="https://i.imgur.com/68ya6ZM.png" alt="OMP Logo">
+        </div>
+        <h1>OMP 1st Error Letter Generator</h1>
+        <p><strong>Important Notice:</strong> This tool is authorized for use by OMP personnel only. Any misuse of the generator will be subject to penalties under the UCMJ.</p>
+        <p>Please select the error type and enter the necessary details. Once the BBCode is generated, you can copy it and use it in your message.</p>
+        
+        <div class="step-indicator">
+            <div class="step active">Step 1: Select Error</div>
+            <div class="step">Step 2: Enter Details</div>
+            <div class="step">Step 3: Get BBCode</div>
+        </div>
+        <div class="progress-bar"><div class="progress" id="progress"></div></div>
+
+        <div class="card" id="step1">
+            <select id="choice">
+                <option value="1">Double Posting</option>
+                <option value="2">Incorrect Habbo Name</option>
+                <option value="3">Incorrect Format</option>
+                <option value="4">Unauthorized Training</option>
+                <option value="5">Unauthorized Promotion</option>
+            </select>
+            <button onclick="nextStep()">Next</button>
+        </div>
+        <div id="form-container" class="card" style="display:none;">
+            <p>Enter the details:</p>
+            <input type="text" id="receiverRank" placeholder="Receiver Rank" title="Enter the rank of the receiver" oninput="validateField('receiverRank')"><span class="error" id="receiverRankError"></span><br>
+            <input type="text" id="receiverName" placeholder="Receiver Name" title="Enter the name of the receiver" oninput="validateField('receiverName')"><span class="error" id="receiverNameError"></span><br>
+            <input type="text" id="senderRank" placeholder="Sender Rank" title="Enter your rank" oninput="validateField('senderRank')"><span class="error" id="senderRankError"></span><br>
+            <input type="text" id="senderName" placeholder="Sender Name" title="Enter your name" oninput="validateField('senderName')"><span class="error" id="senderNameError"></span><br>
+            <input type="text" id="date" placeholder="Date (YYYY-MM-DD)" title="Enter the date in YYYY-MM-DD format" oninput="validateField('date')"><span class="error" id="dateError"></span><br>
+            <input type="text" id="error" placeholder="Specific Error" title="Describe the specific error" oninput="validateField('error')"><span class="error" id="errorError"></span><br>
+            <div class="nav-buttons">
+                <button class="back-btn" onclick="prevStep()">Back</button>
+                <button onclick="showBBCode()">Generate BBCode</button>
+            </div>
+        </div>
+        <div id="bbcode-container" class="card" style="display:none;">
+            <h2>Generated BBCode:</h2>
+            <textarea id="bbcode" rows="10" readonly></textarea>
+            <button class="copy-btn" onclick="copyBBCode()">Copy BBCode</button>
+            <div id="preview" style="margin-top: 20px;"></div>
+            <button class="back-btn" onclick="prevStep()">Back</button>
+        </div>
+        <div class="link-container">
+            <p><strong>Note:</strong> Ensure to inspect the letter before sending to check for any errors or formatting needed.</p>
+            <button class="send-link" onclick="openLink()">Send Your Message</button>
+        </div>
+        <div class="link-container">
+            <p>If any issues or errors are found, please contact OMP command.</p>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        function nextStep() {
+            document.querySelector('.step-indicator .step.active').classList.remove('active');
+            document.querySelector('.step-indicator .step:nth-child(2)').classList.add('active');
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('form-container').style.display = 'block';
+            document.getElementById('progress').style.width = '66%';
+        }
+
+        function prevStep() {
+            const currentStep = document.querySelector('.step-indicator .step.active');
+            if (currentStep === document.querySelector('.step-indicator .step:nth-child(2)')) {
+                document.querySelector('.step-indicator .step.active').classList.remove('active');
+                document.querySelector('.step-indicator .step:nth-child(1)').classList.add('active');
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('progress').style.width = '33%';
+            } else if (currentStep === document.querySelector('.step-indicator .step:nth-child(3)')) {
+                document.querySelector('.step-indicator .step.active').classList.remove('active');
+                document.querySelector('.step-indicator .step:nth-child(2)').classList.add('active');
+                document.getElementById('form-container').style.display = 'block';
+                document.getElementById('bbcode-container').style.display = 'none';
+                document.getElementById('progress').style.width = '66%';
+            }
+        }
+
+        function sanitizeInput(input) {
+            const temp = document.createElement('div');
+            temp.textContent = input;
+            return temp.innerHTML;
+        }
+
+        function validateField(fieldId) {
+            const value = document.getElementById(fieldId).value;
+            let error = '';
+            
+            if (!value) {
+                error = 'This field is required';
+            } else {
+                // Add more specific validation logic if needed
+                if (fieldId === 'date' && !value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    error = 'Date must be in YYYY-MM-DD format';
+                }
+            }
+            
+            document.getElementById(fieldId + 'Error').innerText = error;
+        }
+
+        function showBBCode() {
+            const choice = sanitizeInput(document.getElementById('choice').value);
+            const receiverRank = sanitizeInput(document.getElementById('receiverRank').value);
+            const receiverName = sanitizeInput(document.getElementById('receiverName').value);
+            const senderRank = sanitizeInput(document.getElementById('senderRank').value);
+            const senderName = sanitizeInput(document.getElementById('senderName').value);
+            const date = sanitizeInput(document.getElementById('date').value);
+            const error = sanitizeInput(document.getElementById('error').value);
+            let bbcode = '';
+
+            // Validate inputs
+            let isValid = true;
+            const errors = {
+                receiverRankError: '', receiverNameError: '', senderRankError: '', senderNameError: '', dateError: '', errorError: ''
+            };
+            if (!receiverRank) { errors.receiverRankError = 'Receiver Rank is required'; isValid = false; }
+            if (!receiverName) { errors.receiverNameError = 'Receiver Name is required'; isValid = false; }
+            if (!senderRank) { errors.senderRankError = 'Sender Rank is required'; isValid = false; }
+            if (!senderName) { errors.senderNameError = 'Sender Name is required'; isValid = false; }
+            if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) { errors.dateError = 'Date must be in YYYY-MM-DD format'; isValid = false; }
+            if (!error) { errors.errorError = 'Specific Error is required'; isValid = false; }
+            for (const [key, value] of Object.entries(errors)) { document.getElementById(key).innerText = value; }
+            if (!isValid) return;
+
+            switch (choice) {
+                case '1':
+                    bbcode = `[div align="center"][div style="border:10px solid rgb(30, 82, 105);width:80%;padding:40px;box-shadow:rgb(68, 69, 75) 1px 1px 7px;background:url(https://www.toptal.com/designers/subtlepatterns/uploads/what-the-hex.png);border-radius:60px;"][img data-cke-saved-src="https://i.imgur.com/68ya6ZM.png" src="https://i.imgur.com/68ya6ZM.png" alt="Image"][div style="text-align:justify;"][hr]
+[span][font size="3" face="trebuchet ms"][font style="color:rgb(0, 0, 0);text-align:justify;"][b]TO: [/b]${receiverRank}, ${receiverName}
+[b]FROM: [/b]${senderRank}, ${senderName}
+[b]CC: [/b]OMP Command
+[b]SUBJECT: [/b]OMP - MPTS Error, 1st Offense - ${receiverName}
+[b]DATE: [/b]${date}[/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font size="3" face="trebuchet ms"][font color="#000000"]Greetings, I am[/font] [b][font color="#3f6692"]${senderRank} ${senderName}[/font] [/b][font color="#000000"]and I am from the [b]Office of Manpower and Personnel (OMP)[/b]. You are being sent this forum PM as a reminder to you so that you will not[/font] [b][font color="#3f6692"]double post[/font][/b][font color="#000000"] again in the future when posting on the Manual PTS (known as MPTS).
+
+Double posting means that you created a new post when you already had an existing post on Manual PTS. You can just simply edit your last post and put all FEAT, TRG, PROMO or anything else in one post. You [b][u]DO NOT[/u][/b] have to create another post.[/font]
+
+[font color="#000000"][b][u]Where to find 'edit' button?[/u][/b] Top right corner on your post, left to the 'like button'.[/font][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please see the spoiler below to see what error you had. You may reply to this PM if you have more questions.[spoiler]${error}[/spoiler][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please cooperate with us as we are trying our best to ensure the MPTS is not clogged up. Thank you for your cooperation.
+
+Regards,
+${senderName}[/font][/font][/span][/div][/div][/div]`;
+                    break;
+                case '2':
+                    bbcode = `[div align="center"][div style="border:10px solid rgb(30, 82, 105);width:80%;padding:40px;box-shadow:rgb(68, 69, 75) 1px 1px 7px;background:url(https://www.toptal.com/designers/subtlepatterns/uploads/what-the-hex.png);border-radius:60px;"][img data-cke-saved-src="https://i.imgur.com/68ya6ZM.png" src="https://i.imgur.com/68ya6ZM.png" alt="Image"][div style="text-align:justify;"][hr]
+[span][font size="3" face="trebuchet ms"][font style="color:rgb(0, 0, 0);text-align:justify;"][b]TO: [/b]${receiverRank}, ${receiverName}
+[b]FROM: [/b]${senderRank}, ${senderName}
+[b]CC: [/b]OMP Command
+[b]SUBJECT: [/b]OMP - MPTS Error, 1st Offense - ${receiverName}
+[b]DATE: [/b]${date}[/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font size="3" face="trebuchet ms"][font color="#000000"]Greetings, I am[/font] [b][font color="#3f6692"]${senderRank} ${senderName}[/font] [/b][font color="#000000"]and I am from the [b]Office of Manpower and Personnel (OMP)[/b]. You are being sent this forum PM as a reminder to you so that you will not[/font] [b][font color="#3f6692"]use an incorrect Habbo name[/font][/b][font color="#000000"] again in the future when posting on the Manual PTS (known as MPTS).
+
+Using an incorrect Habbo name means that you entered a Habbo name that is not exactly as registered. Ensure you double-check the spelling and formatting before posting.[/font]
+
+[font color="#000000"][b][u]Where to find the correct Habbo name?[/u][/b] You can check your Habbo profile or ask the person directly for the correct spelling.[/font][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please see the spoiler below to see what error you had. You may reply to this PM if you have more questions.[spoiler]${error}[/spoiler][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please cooperate with us as we are trying our best to ensure the MPTS is not clogged up. Thank you for your cooperation.
+
+Regards,
+${senderName}[/font][/span][/div][/div][/div]`;
+                    break;
+                case '3':
+                    bbcode = `[div align="center"][div style="border:10px solid rgb(30, 82, 105);width:80%;padding:40px;box-shadow:rgb(68, 69, 75) 1px 1px 7px;background:url(https://www.toptal.com/designers/subtlepatterns/uploads/what-the-hex.png);border-radius:60px;"][img data-cke-saved-src="https://i.imgur.com/68ya6ZM.png" src="https://i.imgur.com/68ya6ZM.png" alt="Image"][div style="text-align:justify;"][hr]
+[span][font size="3" face="trebuchet ms"][font style="color:rgb(0, 0, 0);text-align:justify;"][b]TO: [/b]${receiverRank}, ${receiverName}
+[b]FROM: [/b]${senderRank}, ${senderName}
+[b]CC: [/b]OMP Command
+[b]SUBJECT: [/b]OMP - MPTS Error, 1st Offense - ${receiverName}
+[b]DATE: [/b]${date}[/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font size="3" face="trebuchet ms"][font color="#000000"]Greetings, I am[/font] [b][font color="#3f6692"]${senderRank} ${senderName}[/font] [/b][font color="#000000"]and I am from the [b]Office of Manpower and Personnel (OMP)[/b]. You are being sent this forum PM as a reminder to you so that you will not[/font] [b][font color="#3f6692"]use an incorrect format[/font][/b][font color="#000000"] again in the future when posting on the Manual PTS (known as MPTS).
+
+Using an incorrect format means that you did not follow the required format for posting. Please refer to the guidelines and ensure your posts meet the required format.[/font]
+
+[font color="#000000"][b][u]Where to find the correct format?[/u][/b] You can find the correct format in the guidelines or ask for assistance from a superior.[/font][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please see the spoiler below to see what error you had. You may reply to this PM if you have more questions.[spoiler]${error}[/spoiler][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please cooperate with us as we are trying our best to ensure the MPTS is not clogged up. Thank you for your cooperation.
+
+Regards,
+${senderName}[/font][/span][/div][/div][/div]`;
+                    break;
+                case '4':
+                    bbcode = `[div align="center"][div style="border:10px solid rgb(30, 82, 105);width:80%;padding:40px;box-shadow:rgb(68, 69, 75) 1px 1px 7px;background:url(https://www.toptal.com/designers/subtlepatterns/uploads/what-the-hex.png);border-radius:60px;"][img data-cke-saved-src="https://i.imgur.com/68ya6ZM.png" src="https://i.imgur.com/68ya6ZM.png" alt="Image"][div style="text-align:justify;"][hr]
+[span][font size="3" face="trebuchet ms"][font style="color:rgb(0, 0, 0);text-align:justify;"][b]TO: [/b]${receiverRank}, ${receiverName}
+[b]FROM: [/b]${senderRank}, ${senderName}
+[b]CC: [/b]OMP Command
+[b]SUBJECT: [/b]OMP - MPTS Error, 1st Offense - ${receiverName}
+[b]DATE: [/b]${date}[/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font size="3" face="trebuchet ms"][font color="#000000"]Greetings, I am[/font] [b][font color="#3f6692"]${senderRank} ${senderName}[/font] [/b][font color="#000000"]and I am from the [b]Office of Manpower and Personnel (OMP)[/b]. You are being sent this forum PM as a reminder to you so that you will not[/font] [b][font color="#3f6692"]conduct unauthorized training[/font][/b][font color="#000000"] again in the future. All training sessions must be authorized and conducted by the appropriate personnel.
+
+Conducting unauthorized training can lead to confusion and misinformation. Please ensure that you follow the proper channels for training sessions.[/font]
+
+[font color="#000000"][b][u]How to get authorization?[/u][/b] You can request authorization through your superior or the appropriate training department.[/font][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please see the spoiler below to see what error you had. You may reply to this PM if you have more questions.[spoiler]${error}[/spoiler][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please cooperate with us as we are trying our best to ensure the MPTS is not clogged up. Thank you for your cooperation.
+
+Regards,
+${senderName}[/font][/span][/div][/div][/div]`;
+                    break;
+                case '5':
+                    bbcode = `[div align="center"][div style="border:10px solid rgb(30, 82, 105);width:80%;padding:40px;box-shadow:rgb(68, 69, 75) 1px 1px 7px;background:url(https://www.toptal.com/designers/subtlepatterns/uploads/what-the-hex.png);border-radius:60px;"][img data-cke-saved-src="https://i.imgur.com/68ya6ZM.png" src="https://i.imgur.com/68ya6ZM.png" alt="Image"][div style="text-align:justify;"][hr]
+[span][font size="3" face="trebuchet ms"][font style="color:rgb(0, 0, 0);text-align:justify;"][b]TO: [/b]${receiverRank}, ${receiverName}
+[b]FROM: [/b]${senderRank}, ${senderName}
+[b]CC: [/b]OMP Command
+[b]SUBJECT: [/b]OMP - MPTS Error, 1st Offense - ${receiverName}
+[b]DATE: [/b]${date}[/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font size="3" face="trebuchet ms"][font color="#000000"]Greetings, I am[/font] [b][font color="#3f6692"]${senderRank} ${senderName}[/font] [/b][font color="#000000"]and I am from the [b]Office of Manpower and Personnel (OMP)[/b]. You are being sent this forum PM as a reminder to you so that you will not[/font] [b][font color="#3f6692"]issue unauthorized promotions[/font][/b][font color="#000000"] again in the future. All promotions must be authorized by the appropriate personnel.
+
+Issuing unauthorized promotions can lead to organizational issues and discrepancies. Please ensure that you follow the proper channels for promotions.[/font]
+
+[font color="#000000"][b][u]How to get authorization?[/u][/b] You can request authorization through your superior or the appropriate department.[/font][/font][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please see the spoiler below to see what error you had. You may reply to this PM if you have more questions.[spoiler]${error}[/spoiler][/font][/span][hr]
+[span][font size="3" face="trebuchet ms"][font face="trebuchet ms" size="3"]Please cooperate with us as we are trying our best to ensure the MPTS is not clogged up. Thank you for your cooperation.
+
+Regards,
+${senderName}[/font][/span][/div][/div][/div]`;
+                    break;
+            }
+
+            document.getElementById('bbcode').value = bbcode;
+            document.getElementById('bbcode-container').style.display = 'block';
+            document.querySelector('.step-indicator .step.active').classList.remove('active');
+            document.querySelector('.step-indicator .step:nth-child(3)').classList.add('active');
+            document.getElementById('progress').style.width = '100%';
+
+            // Real-time preview
+            document.getElementById('preview').innerHTML = bbcode.replace(/\[\/?div.*?\]|\[\/?span.*?\]|\[\/?font.*?\]/g, '').replace(/\[b\](.*?)\[\/b\]/g, '<strong>$1</strong>').replace(/\[u\](.*?)\[\/u\]/g, '<u>$1</u>').replace(/\[spoiler\](.*?)\[\/spoiler\]/g, '<details><summary>Spoiler</summary><p>$1</p></details>').replace(/\[hr\]/g, '<hr>');
+        }
+
+        function copyBBCode() {
+            const bbcode = document.getElementById('bbcode');
+            bbcode.select();
+            document.execCommand('copy');
+            showModal('BBCode copied to clipboard!');
+        }
+
+        function openLink() {
+            const link = "https://boards.habbousdf.com/converse.php?action=compose_newconv&uids=57,463,563,3127,156,1610,1540,100";
+            window.open(link, '_blank');
+        }
+
+        function showModal(message) {
+            const modal = document.getElementById('myModal');
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
